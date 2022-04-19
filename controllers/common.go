@@ -19,7 +19,7 @@ func (r *MemcachedReconciler) ensureDeployment(request reconcile.Request,
 
 	// See if deployment already exists and create if it doesn't
 	found := &appsv1.Deployment{}
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      dep.Name,
 		Namespace: instance.Namespace,
 	}, found)
@@ -27,7 +27,7 @@ func (r *MemcachedReconciler) ensureDeployment(request reconcile.Request,
 
 		// Create the deployment
 		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
-		err = r.client.Create(context.TODO(), dep)
+		err = r.Client.Create(context.TODO(), dep)
 
 		if err != nil {
 			// Deployment failed
@@ -51,7 +51,7 @@ func (r *MemcachedReconciler) ensureService(request reconcile.Request,
 	s *corev1.Service,
 ) (*reconcile.Result, error) {
 	found := &corev1.Service{}
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      s.Name,
 		Namespace: instance.Namespace,
 	}, found)
@@ -59,7 +59,7 @@ func (r *MemcachedReconciler) ensureService(request reconcile.Request,
 
 		// Create the service
 		log.Info("Creating a new Service", "Service.Namespace", s.Namespace, "Service.Name", s.Name)
-		err = r.client.Create(context.TODO(), s)
+		err = r.Client.Create(context.TODO(), s)
 
 		if err != nil {
 			// Creation failed
@@ -83,14 +83,14 @@ func (r *MemcachedReconciler) ensureSecret(request reconcile.Request,
 	s *corev1.Secret,
 ) (*reconcile.Result, error) {
 	found := &corev1.Secret{}
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      s.Name,
 		Namespace: instance.Namespace,
 	}, found)
 	if err != nil && errors.IsNotFound(err) {
 		// Create the secret
 		log.Info("Creating a new secret", "Secret.Namespace", s.Namespace, "Secret.Name", s.Name)
-		err = r.client.Create(context.TODO(), s)
+		err = r.Client.Create(context.TODO(), s)
 
 		if err != nil {
 			// Creation failed

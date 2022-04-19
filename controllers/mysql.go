@@ -36,7 +36,7 @@ func (r *MemcachedReconciler) mysqlAuthSecret(v *cachev1alpha1.Memcached) *corev
 			"password": "visitors-pass",
 		},
 	}
-	controllerutil.SetControllerReference(v, secret, r.scheme)
+	controllerutil.SetControllerReference(v, secret, r.Scheme)
 	return secret
 }
 
@@ -104,7 +104,7 @@ func (r *MemcachedReconciler) mysqlDeployment(v *cachev1alpha1.Memcached) *appsv
 		},
 	}
 
-	controllerutil.SetControllerReference(v, dep, r.scheme)
+	controllerutil.SetControllerReference(v, dep, r.Scheme)
 	return dep
 }
 
@@ -125,7 +125,7 @@ func (r *MemcachedReconciler) mysqlService(v *cachev1alpha1.Memcached) *corev1.S
 		},
 	}
 
-	controllerutil.SetControllerReference(v, s, r.scheme)
+	controllerutil.SetControllerReference(v, s, r.Scheme)
 	return s
 }
 
@@ -133,7 +133,7 @@ func (r *MemcachedReconciler) mysqlService(v *cachev1alpha1.Memcached) *corev1.S
 func (r *MemcachedReconciler) isMysqlUp(v *cachev1alpha1.Memcached) bool {
 	deployment := &appsv1.Deployment{}
 
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      mysqlDeploymentName(),
 		Namespace: v.Namespace,
 	}, deployment)

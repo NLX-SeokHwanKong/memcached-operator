@@ -92,7 +92,7 @@ func (r *MemcachedReconciler) backendDeployment(v *cachev1alpha1.Memcached) *app
 		},
 	}
 
-	controllerutil.SetControllerReference(v, dep, r.scheme)
+	controllerutil.SetControllerReference(v, dep, r.Scheme)
 	return dep
 }
 
@@ -116,19 +116,19 @@ func (r *MemcachedReconciler) backendService(v *cachev1alpha1.Memcached) *corev1
 		},
 	}
 
-	controllerutil.SetControllerReference(v, s, r.scheme)
+	controllerutil.SetControllerReference(v, s, r.Scheme)
 	return s
 }
 
 func (r *MemcachedReconciler) updateBackendStatus(v *cachev1alpha1.Memcached) error {
 	v.Status.BackendImage = backendImage
-	err := r.client.Status().Update(context.TODO(), v)
+	err := r.Client.Status().Update(context.TODO(), v)
 	return err
 }
 
 func (r *MemcachedReconciler) handleBackendChanges(v *cachev1alpha1.Memcached) (*reconcile.Result, error) {
 	found := &appsv1.Deployment{}
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      backendDeploymentName(v),
 		Namespace: v.Namespace,
 	}, found)
@@ -141,7 +141,7 @@ func (r *MemcachedReconciler) handleBackendChanges(v *cachev1alpha1.Memcached) (
 
 	if size != *found.Spec.Replicas {
 		found.Spec.Replicas = &size
-		err = r.client.Update(context.TODO(), found)
+		err = r.Client.Update(context.TODO(), found)
 		if err != nil {
 			log.Error(err, "Failed to update Deployment.", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
 			return &reconcile.Result{}, err

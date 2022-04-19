@@ -33,8 +33,8 @@ import (
 
 // MemcachedReconciler reconciles a Memcached object
 type MemcachedReconciler struct {
-	client client.Client
-	scheme *runtime.Scheme
+	Client client.Client
+	Scheme *runtime.Scheme
 }
 
 var log = logf.Log.WithName("controller_memcached")
@@ -61,7 +61,7 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Fetch the VisitorsApp instance
 	v := &cachev1alpha1.Memcached{}
-	err := r.client.Get(context.TODO(), req.NamespacedName, v)
+	err := r.Client.Get(context.TODO(), req.NamespacedName, v)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request.

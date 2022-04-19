@@ -69,7 +69,7 @@ func (r *MemcachedReconciler) frontendDeployment(v *cachev1alpha1.Memcached) *ap
 		},
 	}
 
-	controllerutil.SetControllerReference(v, dep, r.scheme)
+	controllerutil.SetControllerReference(v, dep, r.Scheme)
 	return dep
 }
 
@@ -95,19 +95,19 @@ func (r *MemcachedReconciler) frontendService(v *cachev1alpha1.Memcached) *corev
 
 	log.Info("Service Spec", "Service.Name", s.ObjectMeta.Name)
 
-	controllerutil.SetControllerReference(v, s, r.scheme)
+	controllerutil.SetControllerReference(v, s, r.Scheme)
 	return s
 }
 
 func (r *MemcachedReconciler) updateFrontendStatus(v *cachev1alpha1.Memcached) error {
 	v.Status.FrontendImage = frontendImage
-	err := r.client.Status().Update(context.TODO(), v)
+	err := r.Client.Status().Update(context.TODO(), v)
 	return err
 }
 
 func (r *MemcachedReconciler) handleFrontendChanges(v *cachev1alpha1.Memcached) (*reconcile.Result, error) {
 	found := &appsv1.Deployment{}
-	err := r.client.Get(context.TODO(), types.NamespacedName{
+	err := r.Client.Get(context.TODO(), types.NamespacedName{
 		Name:      frontendDeploymentName(v),
 		Namespace: v.Namespace,
 	}, found)
@@ -121,7 +121,7 @@ func (r *MemcachedReconciler) handleFrontendChanges(v *cachev1alpha1.Memcached) 
 
 	if title != existing {
 		(*found).Spec.Template.Spec.Containers[0].Env[0].Value = title
-		err = r.client.Update(context.TODO(), found)
+		err = r.Client.Update(context.TODO(), found)
 		if err != nil {
 			log.Error(err, "Failed to update Deployment.", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
 			return &reconcile.Result{}, err
